@@ -11,12 +11,15 @@ import javax.persistence.Table;
 public class Curso {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private String nome;
 	
 	private String categoria;
+	
+	public Curso() {
+	}
 
 	public Curso(String nome, String categoria) {
 		this.nome = nome;
