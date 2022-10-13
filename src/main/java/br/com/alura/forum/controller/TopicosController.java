@@ -8,6 +8,8 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -69,6 +71,7 @@ public class TopicosController {
 	}
 	
 	@GetMapping("/por-nome-pageable")
+	@Cacheable(value = "listarTopicoPorNomeCursoPageable")
 	public Page<TopicoDto> listarTopicoPorNomeCursoPageable(@RequestParam(required = false) String nomeCurso, 
 			@PageableDefault(page = 0, size = 3, sort = "id", direction = Direction.DESC) Pageable pageable) {
 		
@@ -83,6 +86,7 @@ public class TopicosController {
 		return TopicoDto.converterToPage(topicos);
 	}
 	
+	@CacheEvict(value = "listarTopicoPorNomeCursoPageable", allEntries = true)
 	@PostMapping
 	public ResponseEntity<TopicoDto> cadastrar(@RequestBody @Valid TopicoForm topicoForm, 
 			UriComponentsBuilder uriComponentsBuilder) {
@@ -106,6 +110,7 @@ public class TopicosController {
 				: ResponseEntity.notFound().build();
 	}
 
+	@CacheEvict(value = "listarTopicoPorNomeCursoPageable", allEntries = true)
 	@Transactional
 	@PutMapping("/{id}")
 	public ResponseEntity<TopicoDto> atualizar(@PathVariable Long id, 
@@ -122,6 +127,7 @@ public class TopicosController {
 		return ResponseEntity.notFound().build();
 	}
 	
+	@CacheEvict(value = "listarTopicoPorNomeCursoPageable", allEntries = true)
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deletar(@PathVariable Long id) {
 		Topico topico = this.getTopico(id);
